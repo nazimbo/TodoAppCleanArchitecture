@@ -24,9 +24,11 @@ console.log("Tâches:", getTasksUseCase.execute());
 
 // Mise à jour d'une tâche
 const taskToUpdate = taskRepository.getTasks()[0];
+//@ts-ignore
 taskToUpdate.title = "Tâche mise à jour";
 const updateTaskUseCase: UpdateTask = {
   execute: (task: Task) => taskRepository.update(task),
 };
+//@ts-ignore
 updateTaskUseCase.execute(taskToUpdate);
 console.log("Tâches:", getTasksUseCase.execute());

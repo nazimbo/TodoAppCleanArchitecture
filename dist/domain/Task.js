@@ -1,8 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Task = void 0;
-// src/domain/Task.ts
-class Task {
+export class Task {
     constructor(id, title, description, dueDate, completed) {
         this.id = id;
         this.title = title;
@@ -11,4 +7,4 @@ class Task {
         this.completed = completed;
     }
 }
-exports.Task = Task;
+//# sourceMappingURL=Task.js.map
