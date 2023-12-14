@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InMemoryTaskRepository = void 0;
-class InMemoryTaskRepository {
+export class InMemoryTaskRepository {
     constructor() {
         this.tasks = [];
     }
@@ -29,4 +26,4 @@ class InMemoryTaskRepository {
         return false;
     }
 }
-exports.InMemoryTaskRepository = InMemoryTaskRepository;
+//# sourceMappingURL=InMemoryTaskRepository.js.map
