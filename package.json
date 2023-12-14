@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "npx ts-node src/interfaces/cli.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }
