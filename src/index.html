@@ -3,12 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="styles.css" />
     <title>Ma Todo List</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .app {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .task-container {
+        margin-top: 20px;
+      }
+
+      .task {
+        padding: 10px;
+        background-color: #eee;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+
+      .task.completed {
+        background-color: #c0e5c8;
+      }
+
+      .add-task-container {
+        display: flex;
+        margin-top: 20px;
+      }
+
+      #task-input {
+        flex-grow: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      #add-task-btn {
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #add-task-btn:hover {
+        background-color: #45a049;
+      }
+
+      /* Add this style for delete button */
+      .delete-task-btn {
+        margin-left: 10px;
+        background-color: #ff5c5c;
+        color: #fff;
+      }
+    </style>
   </head>
   <body>
     <div class="app">
       <h1>Ma Todo List</h1>
+      <div class="filter-container">
+        <button id="all-tasks-btn">All</button>
+        <button id="completed-tasks-btn">Completed</button>
+        <button id="pending-tasks-btn">Pending</button>
+      </div>
       <div class="task-container" id="task-container">
         <!-- La liste des tâches sera affichée ici -->
       </div>
@@ -16,8 +89,93 @@
         <input type="text" id="task-input" placeholder="Ajouter une tâche..." />
         <button id="add-task-btn">Ajouter</button>
       </div>
-
-      <script src="bundle.js"></script>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const taskContainer = document.getElementById("task-container");
+        const taskInput = document.getElementById("task-input");
+        const addTaskBtn = document.getElementById("add-task-btn");
+
+        async function displayTasks() {
+          const tasks = await fetchTasks();
+
+          taskContainer.innerHTML = "";
+          tasks.forEach((task) => {
+            const taskElement = document.createElement("div");
+            taskElement.classList.add("task");
+            if (task.completed) {
+              taskElement.classList.add("completed");
+            }
+            taskElement.innerHTML = `
+        <span>${task.title}</span>
+        <p>${task.description}</p>
+        <p>Due Date: ${task.dueDate.toLocaleDateString()}</p>
+        <button class="complete-task-btn" data-task-id="${task.id}">Complete</button>
+        <button class="delete-task-btn" data-task-id="${task.id}">Delete</button>
+      `;
+            taskContainer.appendChild(taskElement);
+          });
+
+          taskInput.value = "";
+          addTaskEventListeners();
+        }
+
+        function addTaskEventListeners() {
+          const completeButtons = document.querySelectorAll(".complete-task-btn");
+          completeButtons.forEach((button) => {
+            button.addEventListener("click", completeTask);
+          });
+
+          const deleteButtons = document.querySelectorAll(".delete-task-btn");
+          deleteButtons.forEach((button) => {
+            button.addEventListener("click", deleteTask);
+          });
+        }
+
+        async function completeTask(event) {
+          const taskId = event.target.dataset.taskId;
+          await updateTask({ id: taskId, completed: true });
+          await displayTasks();
+        }
+
+        async function deleteTask(event) {
+          const taskId = event.target.dataset.taskId;
+          await deleteTaskById(taskId);
+          await displayTasks();
+        }
+
+        async function addTask() {
+          const taskText = taskInput.value.trim();
+          if (taskText !== "") {
+            await createTask({ title: taskText, description: "", dueDate: new Date(), completed: false });
+            await displayTasks();
+          }
+        }
+
+        addTaskBtn.addEventListener("click", addTask);
+
+        await displayTasks();
+      });
+
+      async function fetchTasks() {
+        return [
+          { id: "1", title: "Tâche 1", description: "", dueDate: new Date(), completed: false },
+          { id: "2", title: "Tâche 2", description: "", dueDate: new Date(), completed: true },
+        ];
+      }
+
+      async function createTask(taskData) {
+        console.log("Nouvelle tâche créée :", taskData);
+      }
+
+      async function updateTask(taskData) {
+        console.log("Tâche mise à jour :", taskData);
+      }
+
+      async function deleteTaskById(taskId) {
+        console.log("Tâche supprimée avec l'ID :", taskId);
+      }
+    </script>
   </body>
 </html>
